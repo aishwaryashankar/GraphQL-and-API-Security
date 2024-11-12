@@ -3,6 +3,7 @@ export const typeDefs = `#graphql
 type User {
     id: ID!
     username: String!
+    password: String!
     email: String! 
     reviews: [Review!]
     recipes: [Recipe!]
@@ -38,5 +39,7 @@ type Query {
     recipe(id: ID!): Recipe
     review(id: ID!): Review
 }
+
+
 
 `
