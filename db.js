@@ -52,21 +52,21 @@ let recipes = [
     // Description
     // Recipe
 let reviews = [
-    { id: '1', rating: 5, description: 'Amazing recipe, really enjoyed it!', user_id: users[1], recipe_id:: recipes[0] },
-    { id: '2', rating: 4, description: 'Very good, but a little salty.', user_id: users[0], recipe_id:: recipes[1] },
-    { id: '3', rating: 3, description: 'It was okay. Needs more seasoning.', user_id: users[2], recipe_id:: recipes[2] },
-    { id: '4', rating: 5, description: 'The best beef stew I have ever had!', user_id: users[3], recipe_id:: recipes[3] },
-    { id: '5', rating: 4, description: 'Loved these tacos, though I added more salsa.', user_id: users[4], recipe_id:: recipes[4] },
-    { id: '6', rating: 5, description: 'Delicious chocolate cake! Perfect for birthdays.', user_id: users[0], recipe_id:: recipes[5] },
-    { id: '7', rating: 2, description: 'Pancakes turned out a little too flat.', user_id: users[1], recipe_id:: recipes[6] },
-    { id: '8', rating: 5, description: 'So hearty and flavorful. Perfect for cold days.', user_id: users[2], recipe_id:: recipes[7] },
-    { id: '9', rating: 3, description: 'Not a fan of the spice mix.', user_id: users[3], recipe_id:: recipes[8] },
-    { id: '10', rating: 4, description: 'Rich and creamy, but a bit too much butter.', user_id: users[4], recipe_id:: recipes[9] },
-    { id: '11', rating: 5, description: 'Great balance of flavors. Will make again.', user_id: users[0], recipe_id:: recipes[1] },
-    { id: '12', rating: 4, description: 'Simple yet tasty. I added a few extra veggies.', user_id: users[1], recipe_id:: recipes[2] },
-    { id: '13', rating: 5, description: 'Perfect recipe, everyone loved it.', user_id: users[2], recipe_id:: recipes[5] },
-    { id: '14', rating: 4, description: 'The soup was delicious, but a bit too spicy for me.', user_id: users[3], recipe_id:: recipes[8] },
-    { id: '15', rating: 5, description: 'A wonderful dish! Very comforting.', user_id: users[4], recipe_id:: recipes[7] },
+    { id: '1', rating: 5, description: 'Amazing recipe, really enjoyed it!', user_id: users[1], recipe_id: recipes[0] },
+    { id: '2', rating: 4, description: 'Very good, but a little salty.', user_id: users[0], recipe_id: recipes[1] },
+    { id: '3', rating: 3, description: 'It was okay. Needs more seasoning.', user_id: users[2], recipe_id: recipes[2] },
+    { id: '4', rating: 5, description: 'The best beef stew I have ever had!', user_id: users[3], recipe_id: recipes[3] },
+    { id: '5', rating: 4, description: 'Loved these tacos, though I added more salsa.', user_id: users[4], recipe_id: recipes[4] },
+    { id: '6', rating: 5, description: 'Delicious chocolate cake! Perfect for birthdays.', user_id: users[0], recipe_id: recipes[5] },
+    { id: '7', rating: 2, description: 'Pancakes turned out a little too flat.', user_id: users[1], recipe_id: recipes[6] },
+    { id: '8', rating: 5, description: 'So hearty and flavorful. Perfect for cold days.', user_id: users[2], recipe_id: recipes[7] },
+    { id: '9', rating: 3, description: 'Not a fan of the spice mix.', user_id: users[3], recipe_id: recipes[8] },
+    { id: '10', rating: 4, description: 'Rich and creamy, but a bit too much butter.', user_id: users[4], recipe_id: recipes[9] },
+    { id: '11', rating: 5, description: 'Great balance of flavors. Will make again.', user_id: users[0], recipe_id: recipes[1] },
+    { id: '12', rating: 4, description: 'Simple yet tasty. I added a few extra veggies.', user_id: users[1], recipe_id: recipes[2] },
+    { id: '13', rating: 5, description: 'Perfect recipe, everyone loved it.', user_id: users[2], recipe_id: recipes[5] },
+    { id: '14', rating: 4, description: 'The soup was delicious, but a bit too spicy for me.', user_id: users[3], recipe_id: recipes[8] },
+    { id: '15', rating: 5, description: 'A wonderful dish! Very comforting.', user_id: users[4], recipe_id: recipes[7] },
   ];
 
 export default (users, recipes, reviews)
