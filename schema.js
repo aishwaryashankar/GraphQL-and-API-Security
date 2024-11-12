@@ -5,15 +5,12 @@ type User {
     username: String!
     password: String!
     email: String! 
-    reviews: [Review!]
-    recipes: [Recipe!]
 }
 
 
 type Recipe {
     id: ID!
     name: String!
-    reviews: [Review!]
     poster: User!
     status: String!
     instructions: String!
