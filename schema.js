@@ -13,6 +13,7 @@ type Recipe {
     name: String!
     poster: User!
     status: String!
+    reviews: [Review!]
     instructions: String!
    
 }
@@ -21,7 +22,7 @@ type Recipe {
 type Review {
     id: ID!
     rating: Int!
-    poster: User!
+    user: User!
     description: String!
     recipe: Recipe!
 }
