@@ -7,27 +7,32 @@ let users =  [
   { 
     id: '1', 
     username: 'johndoe', 
-    email: 'johndoe@example.com'
+    email: 'johndoe@example.com',
+    password: 'johndoe2'
   },
   { 
     id: '2', 
     username: 'janedoe', 
-    email: 'janedoe@example.com'
+    email: 'janedoe@example.com',
+    password: 'janedoe1'
   },
   { 
     id: '3', 
     username: 'bobby', 
-    email: 'bobby@example.com'
+    email: 'bobby@example.com',
+    password: 'bobbypwd1'
   },
   { 
     id: '4', 
     username: 'susan', 
-    email: 'susan@example.com'
+    email: 'susan@example.com',
+    password: 'susanpwd2'
   },
   { 
     id: '5', 
     username: 'markus', 
-    email: 'markus@example.com'
+    email: 'markus@example.com',
+    password: 'markuspwd3'
   }
 ];
 // Recipes:
