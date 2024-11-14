@@ -15,7 +15,7 @@ const resolvers = {
         // retrieve all users
         users() 
         {
-            return db.users
+           return db.users
         },
 
         // retrieve all recipes
@@ -55,6 +55,10 @@ const resolvers = {
         reviews(parent) 
         {
             return db.reviews.filter((review) => review.recipe_id === parent.id)
+        },
+        user(parent)
+        {
+            return db.users.find((user) => user.id) === parent.user_id
         }
     },
 
@@ -69,10 +73,22 @@ const resolvers = {
         {
             return db.users.find((user) => user.id === parent.user_id)
         }
+    },
+
+    User:
+    {
+        recipes(parent) {
+            return db.recipes.filter((recipe) => recipe.user_id === parent.id)
+        },
+
+        reviews(parent) {
+            return db.reviews.filter((review) => review.user_id === parent.id)
+        }
     }
 }
 
 // Server
+
 const server = new ApolloServer(
     {
         typeDefs,
