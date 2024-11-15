@@ -38,6 +38,8 @@ type Query {
     user(id: ID!): User
     recipe(id: ID!): Recipe
     review(id: ID!): Review
+
+    currentUser: User
 }
 
 
