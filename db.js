@@ -9,6 +9,9 @@ let users =  [
   {id: '2',username: 'bobby',email: 'bobby@example.com',password: 'bobbypwd1'},
   {id: '3',username: 'susan',email: 'susan@example.com',password: 'susanpwd2'},
   {id: '4',username: 'markus',email: 'markus@example.com',password: 'markuspwd3'},
+
+  // the below is a dummy record with a missing email address for demo purposes
+  {id: '5',username: 'dummyUser', password: 'dummyUser1'},
 ]
 // Recipes:
     // Id

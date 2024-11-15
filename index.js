@@ -43,13 +43,17 @@ const resolvers = {
         },
 
         // retrieve all recipe reviews
-        reviews() 
+        reviews(parent, args, context) 
         {
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! You are not authenticated.")
+            }
             return db.reviews
         },
 
         // retrieve a single user based on id
-        user(_,args, context) 
+        user(parent,args, context) 
         {
             if (!context.user)
             {
@@ -57,7 +61,7 @@ const resolvers = {
             }
             if (context.user.id === args.id)
             {
-                return context.user
+                return db.users.find((user) => user.id === args.id)
             }
             
             const user = db.users.find((user) => user.id === args.id)
@@ -84,11 +88,16 @@ const resolvers = {
         },
 
         // retrieve a single recipe review based on id
-        review(_,args)
+        review(parent,args,context)
         {
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! You are not authenticated.")
+            }
             return db.reviews.find((review) => review.id === args.id)
         },
 
+        // retrieve the current authenticated user
         currentUser(parent, args, context)
         {
             if (!context.user)
@@ -103,39 +112,86 @@ const resolvers = {
         },
     },
 
-    // Given a recipe, find all the reviews for that recipe
+    // Given a recipe, find all the reviews for that recipe and the user who posted the recipe
     Recipe:
     {
-        reviews(parent) 
+        reviews(parent, args, context) 
         {
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! You are not authenticated.")
+            }
             return db.reviews.filter((review) => review.recipe_id === parent.id)
         },
-        user(parent)
+        user(parent, args, context)
         {
-            return db.users.find((user) => user.id === parent.user_id)
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! No authenticated user!!")
+            }
+            const user = db.users.find((user) => user.id === parent.user_id)
+            if (context.user.id === user.id)
+            {
+                return user
+            }
+            user.password = '-----'
+            return user
+            //return db.users.find((user) => user.id === parent.user_id)
         }
     },
 
     // Given a recipe review, find the recipe it is for and the user who posted the review
     Review: 
     {
-        recipe(parent)
+        recipe(parent, args, context)
         {
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! You are not authenticated.")
+            }
             return db.recipes.find((recipe) => recipe.id === parent.recipe_id)
         },
-        user(parent)
+        user(parent, args, context)
         {
-            return db.users.find((user) => user.id === parent.user_id)
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! No authenticated user!!")
+            }
+            const user = db.users.find((user) => user.id === parent.user_id)
+            if (parent.user_id === context.user.id)
+            {
+                return user
+            }
+            user.password = '-----'
+            return user
+
+            
         }
     },
 
+    // Given a user, retrieve their recipes and the reviews they have posted
     User:
     {
-        recipes(parent) {
-            return db.recipes.filter((recipe) => recipe.user_id === parent.id)
+        recipes(parent, args, context) {
+            //console.log("PARENT: ",parent)
+            //console.log("CONTEXT: ",context)
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! No authenticated user!!")
+            }
+            if (context.user.id === parent.id)
+            {
+                return db.recipes.filter((recipe) => recipe.user_id === parent.id)
+            }
+            return db.recipes.filter((recipe) => recipe.user_id === parent.id && recipe.status === 'published')
+            
         },
 
-        reviews(parent) {
+        reviews(parent, args, context) {
+            if (!context.user)
+            {
+                throw new GraphQLError("Error! You are not authenticated.")
+            }
             return db.reviews.filter((review) => review.user_id === parent.id)
         }
     }
