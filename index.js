@@ -206,6 +206,7 @@ const server = new ApolloServer(
         typeDefs,
         resolvers,
         ...armor.protect(),
+        introspection: process.env.NODE_ENV !== 'production',
     }
 )
 
