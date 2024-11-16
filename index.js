@@ -1,5 +1,6 @@
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
+import { ApolloArmor } from '@escape.tech/graphql-armor';
 import { GraphQLError } from 'graphql'
 
 
@@ -9,6 +10,8 @@ import db from './db.js'
 // TypeDefs
 import { typeDefs } from './schema.js'
 
+// Apollo Armor
+const armor = new ApolloArmor({ maxDepth: { n: 8 } });
 
 // Resolvers
 const resolvers = {
@@ -202,6 +205,7 @@ const server = new ApolloServer(
     {
         typeDefs,
         resolvers,
+        ...armor.protect(),
     }
 )
 
