@@ -1,6 +1,4 @@
 export const typeDefs = `#graphql
-  # Rate limit directive
-  directive @rateLimit(max: Int!, window: Int!) on FIELD_DEFINITION
 
 type User {
     id: ID!
@@ -47,15 +45,15 @@ type Mutation {
 }
 
 type Query {
-    users: [User] @rateLimit(max: 10, window: 60)  # Limit to 10 requests per minute
-    recipes: [Recipe] @rateLimit(max: 10, window: 60)  # Limit to 10 requests per minute
-    reviews: [Review] @rateLimit(max: 10, window: 60)  # Limit to 10 requests per minute
+    users: [User] 
+    recipes: [Recipe] 
+    reviews: [Review] 
 
-    user(id: ID!): User @rateLimit(max: 5, window: 60)  # Limit to 5 requests per minute
-    recipe(id: ID!): Recipe @rateLimit(max: 5, window: 60)  # Limit to 5 requests per minute
-    review(id: ID!): Review @rateLimit(max: 5, window: 60)  # Limit to 5 requests per minute
+    user(id: ID!): User 
+    recipe(id: ID!): Recipe 
+    review(id: ID!): Review 
 
-    currentUser: User @rateLimit(max: 5, window: 60)  # Limit to 5 requests per minute
+    currentUser: User 
   }
 
 

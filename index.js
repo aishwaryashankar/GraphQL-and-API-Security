@@ -2,8 +2,7 @@ import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
 import { ApolloArmor } from '@escape.tech/graphql-armor';
 import { GraphQLError } from 'graphql';
-import pkg from 'graphql-rate-limit'; // Import the entire module
-const { rateLimitDirective, RateLimitDirectiveTypeDefs } = pkg; // Destructure the needed exports
+
 
 
 
@@ -15,6 +14,29 @@ import { typeDefs } from './schema.js'
 
 // Apollo Armor
 const armor = new ApolloArmor({ maxDepth: { n: 8 } });
+
+const rateLimitStore = {};
+
+// Max requests per minute per user
+const MAX_REQUESTS_PER_MINUTE = 10;
+
+// Rate Limiting Middleware
+const rateLimitMiddleware = (userId) => {
+    const now = Date.now();
+    const windowStart = now - 60 * 1000; // 1 minute window
+    const userRateLimit = rateLimitStore[userId] || [];
+
+    // Remove requests that are outside the 1 minute window
+    const recentRequests = userRateLimit.filter((timestamp) => timestamp > windowStart);
+    
+    // If they have exceeded the rate limit, throw an error
+    if (recentRequests.length >= MAX_REQUESTS_PER_MINUTE) {
+        throw new GraphQLError("Rate limit exceeded. Try again later.");
+    }
+
+    // Otherwise, record the current timestamp for this request
+    rateLimitStore[userId] = [...recentRequests, now];
+};
 
 // Alphanumeric input validator for input validation
 const validateAlphanumeric = (input) => {
@@ -28,6 +50,10 @@ const resolvers = {
         // retrieve all users
         users(parent, args, context) 
         {
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -44,7 +70,11 @@ const resolvers = {
 
         // retrieve all recipes
         recipes(parent, args, context) 
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -56,7 +86,11 @@ const resolvers = {
 
         // retrieve all recipe reviews
         reviews(parent, args, context) 
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -66,7 +100,11 @@ const resolvers = {
 
         // retrieve a single user based on id
         user(parent,args, context) 
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -84,7 +122,11 @@ const resolvers = {
 
         // retrieve a single recipe based on id
         recipe(_,args,context)
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -101,7 +143,11 @@ const resolvers = {
 
         // retrieve a single recipe review based on id
         review(parent,args,context)
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! You are not authenticated.")
@@ -111,7 +157,11 @@ const resolvers = {
 
         // retrieve the current authenticated user
         currentUser(parent, args, context)
-        {
+        {   
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user)
             {
                 throw new GraphQLError("Error! No authenticated user!!")
@@ -127,6 +177,10 @@ const resolvers = {
     Mutation: {
         // Add a new recipe
         addRecipe(parent, { name, status, instructions }, context) {
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user) {
                 throw new GraphQLError("Error! You are not authenticated.");
             }
@@ -160,6 +214,10 @@ const resolvers = {
 
         async updateRecipe(_, { id, name, status, instructions }, context) {
             // Check if the user is authenticated
+            if (context.user) {
+                rateLimitMiddleware(context.user.id);
+            }
+
             if (!context.user) {
               throw new GraphQLError("Error! You are not authenticated.");
             }
@@ -296,11 +354,8 @@ const resolvers = {
 // Setting Up the Apollo Server and auth mechanism
 const server = new ApolloServer(
     {
-        typeDefs: [RateLimitDirectiveTypeDefs, typeDefs],
+        typeDefs,
         resolvers,
-        schemaDirectives: {
-            rateLimit: rateLimitDirective,  // Apply rate limit directive
-          },
         ...armor.protect(),
     }
 )
