@@ -1,7 +1,10 @@
 import { ApolloServer } from '@apollo/server'
 import { startStandaloneServer } from '@apollo/server/standalone'
 import { ApolloArmor } from '@escape.tech/graphql-armor';
-import { GraphQLError } from 'graphql'
+import { GraphQLError } from 'graphql';
+import pkg from 'graphql-rate-limit'; // Import the entire module
+const { rateLimitDirective, RateLimitDirectiveTypeDefs } = pkg; // Destructure the needed exports
+
 
 
 // Data
@@ -203,8 +206,11 @@ const resolvers = {
 // Setting Up the Apollo Server and auth mechanism
 const server = new ApolloServer(
     {
-        typeDefs,
+        typeDefs: [RateLimitDirectiveTypeDefs, typeDefs],
         resolvers,
+        schemaDirectives: {
+            rateLimit: rateLimitDirective,  // Apply rate limit directive
+          },
         ...armor.protect(),
     }
 )
