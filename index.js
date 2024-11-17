@@ -147,7 +147,7 @@ const resolvers = {
             }
 
             const newRecipe = {
-                id: db.recipes.length + 1, // Simple way to generate an ID (you can use UUID or other methods in production)
+                id: (db.recipes.length + 1).toString(), // Simple way to generate an ID (you can use UUID or other methods in production)
                 name,
                 status,
                 instructions,
@@ -158,50 +158,54 @@ const resolvers = {
             return newRecipe;
         },
 
-        // Update an existing recipe
-        updateRecipe(parent, { id, name, status, instructions }, context) {
+        async updateRecipe(_, { id, name, status, instructions }, context) {
+            // Check if the user is authenticated
             if (!context.user) {
-                throw new GraphQLError("Error! You are not authenticated.");
+              throw new GraphQLError("Error! You are not authenticated.");
             }
-
-            const recipe = db.recipes.find((recipe) => recipe.id === id);
-            if (!recipe) {
-                throw new GraphQLError("Error! Recipe not found.");
+      
+            // Fetch all recipes of the authenticated user
+            const userRecipes = db.recipes.filter((recipe) => recipe.user_id === context.user.id);
+      
+            // Find the recipe to update within the user's recipes
+            const recipeToUpdate = userRecipes.find((recipe) => recipe.id === id);
+      
+      
+            // If recipe is not found, throw an error
+            if (!recipeToUpdate) {
+              throw new GraphQLError("Error! Recipe not found or you are not authorized to update this recipe.");
             }
-
-            // Ensure the user is the owner of the recipe before update
-            if (recipe.user_id !== context.user.id) {
-                throw new GraphQLError("Error! You are not authorized to update this recipe.");
+      
+            // Validate the status (must be either 'published' or 'unpublished')
+            if (status && !['published', 'unpublished'].includes(status)) {
+              throw new GraphQLError("Error! Invalid status. Status must be either 'published' or 'unpublished'.");
             }
-
-            // Validate status
-            if (status && status !== "published" && status !== "unpublished") {
-                throw new GraphQLError("Error! The status must be 'published' or 'unpublished'.");
+      
+            // Validate the name 
+            if (name && !/^[a-zA-Z0-9\s]+$/.test(name)) {
+              throw new GraphQLError("Error! Recipe name must be alphanumeric.");
             }
-
-            // Validate name
-            if (name && !validateAlphanumeric(name)) {
-                throw new GraphQLError("Error! The recipe name must be alphanumeric (letters, digits, and spaces only).");
+      
+            // Validate instructions 
+            if (instructions && !/^[a-zA-Z0-9\s.,!]+$/.test(instructions)) {
+              throw new GraphQLError("Error! Instructions must be alphanumeric and may include punctuation.");
             }
-
-            // Validate instructions
-            if (instructions && !validateAlphanumeric(instructions)) {
-                throw new GraphQLError("Error! The instructions must be alphanumeric (letters, digits, and spaces only).");
-            }
-
-            // Update the fields
-            if (name !== undefined) {
-                recipe.name = name;
-            }
-            if (status !== undefined) {
-                recipe.status = status;
-            }
-            if (instructions !== undefined) {
-                recipe.instructions = instructions;
-            }
-
-            return recipe;
-        }
+      
+            // If validation passes, update the recipe
+            const updatedRecipe = {
+              ...recipeToUpdate,
+              name: name || recipeToUpdate.name, 
+              status: status || recipeToUpdate.status,
+              instructions: instructions || recipeToUpdate.instructions, 
+            };
+      
+            // Update the recipe in the database (simulating DB update here)
+            const recipeIndex = db.recipes.findIndex((recipe) => recipe.id === id);
+            db.recipes[recipeIndex] = updatedRecipe;
+      
+            // Return the updated recipe
+            return updatedRecipe;
+          }
     },
 
     // Given a recipe, find all the reviews for that recipe and the user who posted the recipe
