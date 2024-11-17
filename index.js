@@ -16,6 +16,12 @@ import { typeDefs } from './schema.js'
 // Apollo Armor
 const armor = new ApolloArmor({ maxDepth: { n: 8 } });
 
+// Alphanumeric input validator for input validation
+const validateAlphanumeric = (input) => {
+    const alphanumericPattern = /^[a-zA-Z0-9\s]+$/;
+    return alphanumericPattern.test(input);
+};
+
 // Resolvers
 const resolvers = {
     Query: {
@@ -116,6 +122,86 @@ const resolvers = {
             }
           
         },
+    },
+
+    Mutation: {
+        // Add a new recipe
+        addRecipe(parent, { name, status, instructions }, context) {
+            if (!context.user) {
+                throw new GraphQLError("Error! You are not authenticated.");
+            }
+
+            // Validate status
+            if (status !== "published" && status !== "unpublished") {
+                throw new GraphQLError("Error! The status must be 'published' or 'unpublished'.");
+            }
+
+            // Validate name
+            if (!validateAlphanumeric(name)) {
+                throw new GraphQLError("Error! The recipe name must be alphanumeric (letters, digits, and spaces only).");
+            }
+
+            // Validate instructions
+            if (!validateAlphanumeric(instructions)) {
+                throw new GraphQLError("Error! The instructions must be alphanumeric (letters, digits, and spaces only).");
+            }
+
+            const newRecipe = {
+                id: db.recipes.length + 1, // Simple way to generate an ID (you can use UUID or other methods in production)
+                name,
+                status,
+                instructions,
+                user_id: context.user.id,
+            };
+
+            db.recipes.push(newRecipe);
+            return newRecipe;
+        },
+
+        // Update an existing recipe
+        updateRecipe(parent, { id, name, status, instructions }, context) {
+            if (!context.user) {
+                throw new GraphQLError("Error! You are not authenticated.");
+            }
+
+            const recipe = db.recipes.find((recipe) => recipe.id === id);
+            if (!recipe) {
+                throw new GraphQLError("Error! Recipe not found.");
+            }
+
+            // Ensure the user is the owner of the recipe before update
+            if (recipe.user_id !== context.user.id) {
+                throw new GraphQLError("Error! You are not authorized to update this recipe.");
+            }
+
+            // Validate status
+            if (status && status !== "published" && status !== "unpublished") {
+                throw new GraphQLError("Error! The status must be 'published' or 'unpublished'.");
+            }
+
+            // Validate name
+            if (name && !validateAlphanumeric(name)) {
+                throw new GraphQLError("Error! The recipe name must be alphanumeric (letters, digits, and spaces only).");
+            }
+
+            // Validate instructions
+            if (instructions && !validateAlphanumeric(instructions)) {
+                throw new GraphQLError("Error! The instructions must be alphanumeric (letters, digits, and spaces only).");
+            }
+
+            // Update the fields
+            if (name !== undefined) {
+                recipe.name = name;
+            }
+            if (status !== undefined) {
+                recipe.status = status;
+            }
+            if (instructions !== undefined) {
+                recipe.instructions = instructions;
+            }
+
+            return recipe;
+        }
     },
 
     // Given a recipe, find all the reviews for that recipe and the user who posted the recipe

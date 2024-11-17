@@ -32,19 +32,19 @@ type Review {
 }
 
 type Mutation {
-    createRecipe(
-      name: String!
-      instructions: String!
-      status: String!
-    ): Recipe!
+    addRecipe(
+        name: String!
+        status: String!
+        instructions: String!
+    ): Recipe
 
     updateRecipe(
-      id: ID!
-      name: String
-      instructions: String
-      status: String
-    ): Recipe!
-  }
+        id: ID!
+        name: String
+        status: String
+        instructions: String
+    ): Recipe
+}
 
 type Query {
     users: [User] @rateLimit(max: 10, window: 60)  # Limit to 10 requests per minute
