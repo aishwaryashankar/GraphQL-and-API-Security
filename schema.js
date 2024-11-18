@@ -29,18 +29,32 @@ type Review {
     recipe: Recipe!
 }
 
+type Mutation {
+    addRecipe(
+        name: String!
+        status: String!
+        instructions: String!
+    ): Recipe
+
+    updateRecipe(
+        id: ID!
+        name: String
+        status: String
+        instructions: String
+    ): Recipe
+}
 
 type Query {
-    users: [User]
-    recipes: [Recipe]
-    reviews: [Review]
+    users: [User] 
+    recipes: [Recipe] 
+    reviews: [Review] 
 
-    user(id: ID!): User
-    recipe(id: ID!): Recipe
-    review(id: ID!): Review
+    user(id: ID!): User 
+    recipe(id: ID!): Recipe 
+    review(id: ID!): Review 
 
-    currentUser: User
-}
+    currentUser: User 
+  }
 
 
 

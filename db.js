@@ -37,7 +37,7 @@ let recipes = [
 let reviews = [
     { id: '1', rating: 5, description: 'Amazing recipe, really enjoyed it!', user_id: '1', recipe_id: '0' },
     { id: '2', rating: 4, description: 'Very good, but a little salty.', user_id: '0', recipe_id: '1' },
-    { id: '3', rating: 3, description: 'It was okay. Needs more seasoning.', user_id: '2', recipe_id: '2' },
+    { id: '3', rating: 3, description: 'It was okay. Needs more seasoning.', user_id: '2', recipe_id: '1' },
     { id: '4', rating: 5, description: 'The best beef stew I have ever had!', user_id: '3', recipe_id: '3'},
     { id: '5', rating: 4, description: 'Loved these tacos, though I added more salsa.', user_id: '4', recipe_id: '4' },
     { id: '6', rating: 5, description: 'Delicious chocolate cake! Perfect for birthdays.', user_id: '0', recipe_id: '5'},
@@ -46,9 +46,9 @@ let reviews = [
     { id: '9', rating: 3, description: 'Not a fan of the spice mix.', user_id: '3', recipe_id: '8' },
     { id: '10', rating: 4, description: 'Rich and creamy, but a bit too much butter.', user_id: '4', recipe_id: '9' },
     { id: '11', rating: 5, description: 'Great balance of flavors. Will make again.', user_id: '0', recipe_id: '1' },
-    { id: '12', rating: 4, description: 'Simple yet tasty. I added a few extra veggies.', user_id: '1', recipe_id: '2'},
+    { id: '12', rating: 4, description: 'Simple yet tasty. I added a few extra veggies.', user_id: '1', recipe_id: '1'},
     { id: '13', rating: 5, description: 'Perfect recipe, everyone loved it.', user_id: '2', recipe_id: '5' },
-    { id: '14', rating: 4, description: 'The soup was delicious, but a bit too spicy for me.', user_id: '3', recipe_id: '8' },
+    { id: '14', rating: 4, description: 'The soup was delicious, but a bit too spicy for me.', user_id: '3', recipe_id: '3' },
     { id: '15', rating: 5, description: 'A wonderful dish! Very comforting.', user_id: '4', recipe_id: '7' },
   ]
 
