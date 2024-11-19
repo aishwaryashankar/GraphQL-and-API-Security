@@ -365,7 +365,12 @@ const { url } = await startStandaloneServer(server,
     {
     context: ({ req }) => 
     {
+        if (!req.headers.authorization)
+        {
+            throw new GraphQLError("No username and password specified.")
+        }
       const credentials = req.headers.authorization
+      
       const [uName, pwd] = credentials.split(' ')
       const user = db.users.find((user) => user.username === uName && user.password === pwd)
       return { user }
